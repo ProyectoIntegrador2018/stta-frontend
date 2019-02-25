@@ -1,3 +1,5 @@
+
+<a href="https://codeclimate.com/github/ProyectoIntegrador2018/stte-frontend/maintainability"><img src="https://api.codeclimate.com/v1/badges/61a732391368d0c05ca7/maintainability" /></a>
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
