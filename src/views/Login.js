@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import '../App.css';
 
-import "antd/dist/antd.css";
 import {
   Form, Icon, Input, Button, Checkbox, Row, Col
 } from 'antd';
