@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 
 import {
-    Form, Input, Button, Checkbox,
+    Form, Input, Button,
 } from 'antd';
 
 import '../App.css';
@@ -13,10 +13,7 @@ const formItemLayout = {
     labelCol: { span: 4 },
     wrapperCol: { span: 8 },
 };
-const formTailLayout = {
-    labelCol: { span: 4 },
-    wrapperCol: { span: 8, offset: 4 },
-};
+
 const tailFormItemLayout = {
     wrapperCol: {
         xs: {
