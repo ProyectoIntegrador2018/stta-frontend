@@ -2,16 +2,77 @@ import React, { Component } from 'react';
 import '../App.css';
 
 import {
-  Form, Icon, Input, Button, Checkbox, Row, Col
+  Form, Icon, Input, Button, Checkbox, Row, Col, Modal
 } from 'antd';
 import loginImage from '../images/stte.png';
 import logo from '../images/logo.png';
+
+
+const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
+    class extends React.Component {
+      render() {
+        const {
+          visible, onCancel, onCreate, form,
+        } = this.props;
+        const { getFieldDecorator } = form;
+        return (
+          <Modal
+            visible={visible}
+            title="Restablecer contraseña"
+            okText="Enviar"
+            onCancel={onCancel}
+            onOk={onCreate}
+          >
+            <Form layout="vertical">
+              <Form.Item label="Correo electrónico" type="email">
+                {getFieldDecorator('correo', {
+                  rules: [{ required: true, message: 'Por favor introduce tu correo electrónico' }],
+                })(
+                  <Input />
+                )}
+              </Form.Item>
+            </Form>
+          </Modal>
+        );
+      }
+    }
+  );
+  
 
 class Login extends Component {
 
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  state = {
+    visible: false,
+  };
+
+  showModal = () => {
+    this.setState({ visible: true });
+  }
+
+  handleCancel = () => {
+    this.setState({ visible: false });
+  }
+
+  handleCreate = () => {
+    const form = this.formRef.props.form;
+    form.validateFields((err, values) => {
+      if (err) {
+        return;
+      }
+
+      console.log('Received values of form: ', values);
+      form.resetFields();
+      this.setState({ visible: false });
+    });
+  }
+
+  saveFormRef = (formRef) => {
+    this.formRef = formRef;
   }
 
   handleSubmit = (e) => {
@@ -62,7 +123,13 @@ class Login extends Component {
                 })(
                   <Checkbox>Recuérdame</Checkbox>
                 )}
-                <a className="login-form-right" href="">¿Olvidaste tu contraseña?</a>
+                <a className="login-form-right" onClick={this.showModal}>¿Olvidaste tu contraseña?</a>
+                <CollectionCreateForm
+                  wrappedComponentRef={this.saveFormRef}
+                  visible={this.state.visible}
+                  onCancel={this.handleCancel}
+                  onCreate={this.handleCreate}
+                />
                 <br></br>
                 <Button type="primary" htmlType="submit" className="login-form-button">
                   Log in
