@@ -7,7 +7,6 @@ import {
 import loginImage from '../images/stte.png';
 import logo from '../images/logo.png';
 
-
 const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
     class extends React.Component {
       render() {

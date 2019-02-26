@@ -4,7 +4,7 @@ import './App.css';
 import Login from './views/Login';
 import "antd/dist/antd.css";
 import { BrowserRouter as Router, Route } from 'react-router-dom'
-
+import Restablecer from './views/Restablecer';
 
 class App extends Component {
   render() {

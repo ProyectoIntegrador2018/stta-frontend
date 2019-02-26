@@ -39,3 +39,7 @@ form {
   display: block;
   padding: 20px;
 }
+
+.restore-title {
+  text-align: center;
+}
