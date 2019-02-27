@@ -6,6 +6,8 @@ import {
 } from 'antd';
 import loginImage from '../images/stte.png';
 import logo from '../images/logo.png';
+import API from "../tools/API";
+import Notifications from "../tools/Notifications";
 
 
 const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
@@ -21,8 +23,8 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
             title="Restablecer contraseña"
             okText="Enviar"
             onCancel={onCancel}
-            onOk={onCreate}
-          >
+
+            onOk={onCreate}>
             <Form layout="vertical">
               <Form.Item label="Correo electrónico" type="email">
                 {getFieldDecorator('correo', {
@@ -52,11 +54,11 @@ class Login extends Component {
 
   showModal = () => {
     this.setState({ visible: true });
-  }
+  };
 
   handleCancel = () => {
     this.setState({ visible: false });
-  }
+  };
 
   handleCreate = () => {
     const form = this.formRef.props.form;
@@ -67,19 +69,35 @@ class Login extends Component {
 
       console.log('Received values of form: ', values);
       form.resetFields();
+      API.call('addTokenAdmin',{email:values.correo},(response)=>{
+          if(response.data[0][0] === 1){
+              Notifications.openNotificationWithIcon("success","Revisa tu correo electronico","")
+          }
+      });
+
       this.setState({ visible: false });
     });
-  }
+  };
 
   saveFormRef = (formRef) => {
     this.formRef = formRef;
-  }
+  };
 
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((error, values) => {
       if (!error) {
         console.log('Valores recibidos ', values);
+        API.call('boolAdminLogin',{email:values.userName,password:values.password},(response) => {
+            console.log(response);
+            if (response.data[0][0] === 1){
+                Notifications.openNotificationWithIcon("success","Inicio de sesión exitoso","")
+                window.location = "/dashboard";
+            }else{
+                Notifications.openNotificationWithIcon("error","Credenciales incorrectas","")
+            }
+        });
+
       }
     });
   };
@@ -128,8 +146,7 @@ class Login extends Component {
                   wrappedComponentRef={this.saveFormRef}
                   visible={this.state.visible}
                   onCancel={this.handleCancel}
-                  onCreate={this.handleCreate}
-                />
+                  onCreate={this.handleCreate}/>
                 <br></br>
                 <Button type="primary" htmlType="submit" className="login-form-button">
                   Accesar
