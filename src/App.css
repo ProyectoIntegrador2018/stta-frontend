@@ -155,3 +155,7 @@ form {
     background-color: rgba(25, 99, 25, 0.86) !important;
     color: white !important;
 }
+
+.restore-title {
+  text-align: center;
+}

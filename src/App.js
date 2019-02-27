@@ -9,6 +9,7 @@ import Procesos from "./views/Procesos";
 import AppLayout from "./components/AppLayout";
 import Documentos from "./views/Documentos";
 import DocumentosSubir from "./views/DocumentosSubir";
+import Restablecer from './views/Restablecer';
 
 class App extends Component {
   render() {

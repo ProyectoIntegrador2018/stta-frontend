@@ -9,7 +9,6 @@ import logo from '../images/logo.png';
 import API from "../tools/API";
 import Notifications from "../tools/Notifications";
 
-
 const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
     class extends React.Component {
       render() {
