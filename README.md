@@ -1,6 +1,8 @@
+# Sistema de Trazabilidad de Trámites Escolares
 
 <a href="https://codeclimate.com/github/ProyectoIntegrador2018/stte-frontend/maintainability"><img src="https://api.codeclimate.com/v1/badges/61a732391368d0c05ca7/maintainability" /></a>
-# Sistema de Trazabilidad de Trámites Escolares
+
+
 
 Aplicación web que permite visualizar el estatus de los trámites escolares en la operación interna y además visualizar la consulta por parte de los usuarios hasta que concluya su trámite o petición.
 
@@ -10,9 +12,11 @@ Aplicación web que permite visualizar el estatus de los trámites escolares en 
 * [URLs de ambiente](#urls-de-ambiente)
 * [Equipo](#equipo)
 * [Recursos de gestion](#recursos-de-gestion)
-* [Crear el proyecto](#crear-el-proyecto)
-* [Correr el proyecto para desarrollo](#correr-el-proyecto-para-desarrollo)
-* [Detener el proyecto](#detener-el-proyecto)
+* [Stack tecnológico](#Stack-Tecnologico)
+* [Desarrollo](#desarrollo)
+* [Repositorios](#clonar-repositorioa)
+* [Backend](#backend)
+* [Frontend](#frontend)
 
 ## Detalles del cliente
 
@@ -51,3 +55,78 @@ Aplicación web que permite visualizar el estatus de los trámites escolares en 
 ### Persistencia de datos:
 * MySQL
 
+## Desarollo
+
+### 1. Clonar los repositorios
+Backend
+```
+$ git clone https://github.com/ProyectoIntegrador2018/stte-backend.git
+```
+
+Frontend
+```
+$ git clone https://github.com/ProyectoIntegrador2018/stte-frontend.git
+```
+
+## Backend
+
+### Instalar librerias  
+
+Ya instalado si se está usando Python 2 >=2.7.9 o Python 3 >=3.4
+* Flask
+```
+$ pip install -U Flask
+```
+* flask-cors
+```
+$ pip install -U flask-cors
+```
+* PyMySQL
+```
+$ pip install -U PyMySQL
+```
+* status
+```
+$ pip install -U status
+```
+### Ejecutar
+
+Dentro del folder del proyecto ejecutar:
+```
+$ python -m flask run
+```
+
+### Detener el proyecto
+Para detener el servidor simplemente oprime estas teclas:
+```
+$ CTRL+C
+```
+
+## Frontend
+
+### Instalar librerias  
+
+Ya instalado npm
+```
+$ npm install
+```
+
+Las librerias que se instalan son:
+* ant-desing-pro
+* antd
+* fetch-http-client
+* react-router-dom
+* universal-cookie
+
+### Ejecutar
+
+Dentro del folder del proyecto ejecutar:
+```
+$ npm run start
+```
+
+### Detener el proyecto
+Para detener el proyecto simplemente oprime estas teclas:
+```
+$ CTRL+C
+```
