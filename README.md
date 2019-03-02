@@ -41,7 +41,7 @@ Aplicación web que permite visualizar el estatus de los trámites escolares en 
 ## Recursos de gestion
 
 * [Github](https://github.com/ProyectoIntegrador2018/Sistema-de-Trazabilidad-de-Tramites-Escolares)
-* [Backlog](https://github.com/ProyectoIntegrador2018/Sistema-de-Trazabilidad-de-Tramites-Escolares/projects/2)
+* [Backlog](https://github.com/ProyectoIntegrador2018/stta-backend/projects/1)
 * [Documentación](https://drive.google.com/drive/folders/15AvY0wG4RHUDM6egkHuAgLJnr3TcDuRj?usp=sharing)
 
 ## Stack Tecnologico
