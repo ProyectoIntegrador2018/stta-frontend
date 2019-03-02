@@ -24,7 +24,7 @@ class App extends Component {
                     <Route exact path="/administradores" component={this.AdministradoresView} />
                     <Route exact path="/documentos" component={this.DocumentosView} />
                     <Route exact path="/documentos/subir" component={this.DocumentosSubirView} />
-                    <Route exact path="/restaurar" component={this.LoginView} />
+                    <Route exact path="/restaurar/:token" component={this.Rest} />
                     <Route exact path="/login" component={this.LoginView} />
 
                 </div>
@@ -32,6 +32,11 @@ class App extends Component {
         </div>
     );
   }
+
+  
+  Rest = ({match}) => {
+    return (<Restablecer token={match.params.token}/>);
+  };
 
   LoginView = () => {
     return (<Login/>);
