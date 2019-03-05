@@ -9,6 +9,7 @@
     "papaparse": "^4.6.3",
     "query-string": "^6.2.0",
     "react": "^16.8.1",
+    "react-beforeunload": "^1.0.4",
     "react-dom": "^16.8.1",
     "react-icons": "^3.4.0",
     "react-router-dom": "^4.3.1",

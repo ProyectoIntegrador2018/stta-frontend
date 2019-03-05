@@ -22,7 +22,9 @@ export default class DataTable extends Component {
             selectedRows:[],
             dataSource: props.data || [],
             columns: this.prepareColumns(props.columns || []),
-            loading: props.loading || false
+            loading: props.loading || false,
+            deleteFunc: props.deleteFunc,
+            rowSelection: props.rowSelection || false
         }
 
 
@@ -65,10 +67,10 @@ export default class DataTable extends Component {
 
     rowSelection = {
         onChange: (selectedRowKeys, selectedRows) => {
-            console.log(selectedRows);
-            console.log(selectedRowKeys);
+            //console.log(selectedRows);
+            //console.log(selectedRowKeys);
 
-            this.setState({selectedRows:selectedRowKeys});
+            this.setState({selectedRows:selectedRows});
         }
     };
 
@@ -77,7 +79,7 @@ export default class DataTable extends Component {
     getData = () => {
         let newData = this.state.dataSource.filter((v) => {
             for (let key in v) {
-                if (v[key].toString().toLowerCase().includes(this.state.rowToSearch.toLowerCase()))
+                if ((v[key] || "").toString().toLowerCase().includes(this.state.rowToSearch.toLowerCase()))
                     return true;
             }
             return false;
@@ -89,7 +91,9 @@ export default class DataTable extends Component {
 
     render() {
         return (
-            <Table loading={this.state.loading} locale={{ emptyText: (<div style={{margin:'20px'}}><Icon style={{ fontSize: '36px' }} type="exception" /><br/><b>No hay datos</b></div>) }} rowSelection={this.rowSelection} bordered size={'middle'} dataSource={this.getData()}
+            <Table loading={this.state.loading}
+                   locale={{ emptyText: (<div style={{margin:'20px'}}><Icon style={{ fontSize: '36px' }} type="exception" /><br/><b>No hay datos</b></div>) }}
+                   rowSelection={this.state.rowSelection ? this.rowSelection: false} bordered size={'middle'} dataSource={this.getData()}
                        columns={this.state.columns} scroll={{x:true}}
                        title={() => (
                            <div style={{textAlign:'right', marginRight:10}}>
@@ -100,7 +104,10 @@ export default class DataTable extends Component {
                                    </span>
 
                                    <span hidden={!(this.state.selectedRows.length > 1)}>
-                                        <Popconfirm title="Are you sure delete this task?"  okText="Yes" cancelText="No">
+                                        <Popconfirm title="Estas seguro que deseas eliminar los elementos seleccionados? "
+                                                    okText="Si" cancelText="No"
+                                                    onConfirm={() => this.props.deleteFunc(this.state.selectedRows)}
+                                        >
                                             <Button type="danger" className={'button-danger'} icon={'delete'}/>
                                        </Popconfirm>
                                        &nbsp; &nbsp;{'  ' + this.state.selectedRows.length+ ' elementos seleccionados de un total de ' + this.state.dataSource.length }
@@ -108,7 +115,10 @@ export default class DataTable extends Component {
 
                                    </span>
                                    <span hidden={!(this.state.selectedRows.length === 1)}>
-                                       <Popconfirm title="Are you sure delete this task?"  okText="Yes" cancelText="No">
+                                       <Popconfirm title="Estas seguro que deseas eliminar los elementos seleccionados? "
+                                                   okText="Si" cancelText="No"
+                                                   onConfirm={() => this.props.deleteFunc(this.state.selectedRows)}
+                                       >
                                            <Button type="danger" className={'button-danger'} icon={'delete'}/>
                                        </Popconfirm>
                                        &nbsp; &nbsp;{'  ' + this.state.selectedRows.length+ ' elemento seleccionado de un total de ' + this.state.dataSource.length}
@@ -137,3 +147,8 @@ export default class DataTable extends Component {
         );
     }
 }
+
+
+DataTable.defaultProps = {
+    deleteFunc: (rows)=>{},
+};

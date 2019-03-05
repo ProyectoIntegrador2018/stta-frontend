@@ -1,29 +1,60 @@
 import React, { Component } from 'react';
 import '../App.css';
 import {
-    Form, Icon, Input, Button, Row, Col
+    Form, Icon, Input, Button, Row, Col,Modal
   } from 'antd';
+import {Redirect} from 'react-router-dom';
 import loginImage from '../images/stte.png';
 import logo from '../images/logo.png';
+import API from "../tools/API";
+import Notifications from "../tools/Notifications";
 
 class Restablecer extends Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            token: props.token,
+            confirmDirty: false,
+            loading: false,
+            warning: false,
+            redirect:false
+        };
+
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleConfirmBlur = this.handleConfirmBlur.bind(this);
         this.compareToFirstPassword = this.compareToFirstPassword.bind(this);
         this.validateToNextPassword = this.validateToNextPassword.bind(this);
     }
 
-    state = {
-        confirmDirty: false,
-     };
+    componentDidMount(){
+        this.validateToken();
+    }
+
+    validateToken = () =>{
+        this.setState({ loading: true, });
+        API.call('getValidateEmailTokenAdmin',{token:this.state.token},(response)=>{
+            console.log(response);
+            if(response.resp === 1){
+
+            }else{
+                this.setState({ warning: true });
+                Modal.warning({
+                    title: 'Lo sentimos!',
+                    content: 'El url no existe o ha expirado ',
+                    onOk:() => {this.setState({ redirect: true });}
+                });
+            }
+            this.setState({ loading: false, });
+        });
+    };
+
 
     handleConfirmBlur = (e) => {
     const value = e.target.value;
     this.setState({ confirmDirty: this.state.confirmDirty || !!value });
-    }
+    };
 
     compareToFirstPassword = (rule, value, callback) => {
         const form = this.props.form;
@@ -32,7 +63,7 @@ class Restablecer extends Component {
         } else {
             callback();
         }
-    }
+    };
 
     validateToNextPassword = (rule, value, callback) => {
         const form = this.props.form;
@@ -40,13 +71,22 @@ class Restablecer extends Component {
             form.validateFields(['confirm'], { force: true });
         }
         callback();
-    }
+    };
 
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.form.validateFields((error, values) => {
           if (!error) {
-            console.log('Valores recibidos ', values);
+              this.setState({ loading: true, });
+              API.call('restoreAdmin',{password:values.password, token: this.state.token},(response)=>{
+                  if(response.data[0][0] === 1){
+                      Notifications.openNotificationWithIcon("success","Tu contrasena se restablecio con exito","");
+                      API.logout();
+                      this.setState({ redirect: true, });
+                  }
+                  this.setState({ loading: false, });
+
+              });
           }
         });
       };
@@ -54,6 +94,10 @@ class Restablecer extends Component {
     render() {
 
         const { getFieldDecorator } = this.props.form;
+
+        if (this.state.redirect){
+            return (<Redirect to={'/login'}/>);
+        }
 
         return (
         <div className="App">
@@ -74,9 +118,8 @@ class Restablecer extends Component {
                 </Form.Item>
                 <Form.Item>
                     {getFieldDecorator('password', {
-                    rules: [{ required: true, message: 'Por favor ingresa la nueva contraseña' }, , {
-                        validator: this.validateToNextPassword,
-                      }],
+                    rules: [{ required: true, message: 'Por favor ingresa la nueva contraseña' }, ,
+                        {validator: this.validateToNextPassword,}],
                     })(
                     <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Nueva contraseña" />
                     )}
@@ -91,7 +134,8 @@ class Restablecer extends Component {
                     )}
                 </Form.Item>
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" className="login-form-button">
+                    <Button type="primary" htmlType="submit" className="login-form-button"
+                            loading={this.state.loading} disabled={this.state.loading}>
                     Restablecer contraseña
                     </Button> 
                 </Form.Item>

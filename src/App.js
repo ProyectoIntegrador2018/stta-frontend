@@ -4,15 +4,18 @@ import Login from './views/Login';
 import "antd/dist/antd.css";
 import "ant-design-pro/dist/ant-design-pro.css";
 import './App.css';
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+
+import { BrowserRouter as Router, Route,Redirect } from 'react-router-dom'
 import Procesos from "./views/Procesos";
 import AppLayout from "./components/AppLayout";
 import Documentos from "./views/Documentos";
 import DocumentosSubir from "./views/DocumentosSubir";
 import Restablecer from './views/Restablecer';
+import API from "./tools/API";
 
 class App extends Component {
-  render() {
+
+    render() {
     return (
         <div>
             <Router className="App">
@@ -24,7 +27,7 @@ class App extends Component {
                     <Route exact path="/administradores" component={this.AdministradoresView} />
                     <Route exact path="/documentos" component={this.DocumentosView} />
                     <Route exact path="/documentos/subir" component={this.DocumentosSubirView} />
-                    <Route exact path="/restaurar" component={this.LoginView} />
+                    <Route exact path="/restaurar/:token" component={this.Restaurar} />
                     <Route exact path="/login" component={this.LoginView} />
 
                 </div>
@@ -33,11 +36,19 @@ class App extends Component {
     );
   }
 
-  LoginView = () => {
-    return (<Login/>);
-  };
+    Restaurar = ({match}) => {
+        return (<Restablecer token={match.params.token}/>);
+    };
+
+    LoginView = () => {
+          if (API.cookies.get('token') !=  null){
+              return (<Redirect to={'/dashboard'}/>);
+          }
+        return (<Login/>);
+      };
 
     DashboardView = () => {
+
         return (
             <AppLayout view={"0"} type={"basic"}>
 

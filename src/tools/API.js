@@ -5,7 +5,7 @@ export default class API {
 
     static cookies = new Cookies();
 
-    static call(service, params={}, responseFunc, bjson=false) {
+    static call(service, params={}, responseFunc=(function(response){}), bjson=false) {
         //var  client = new FetchHttpClient('https://api.alideti.com/');
         let  client = new FetchHttpClient('http://127.0.0.1:5000/');
         client.addMiddleware(form());
@@ -33,7 +33,14 @@ export default class API {
     }
 
     static logout() {
-        API.cookies.remove('token');
-        window.location.href = '/login';
+        if (API.cookies.get('token') != null){
+            API.call('logoutAdmin',{token: API.cookies.get('token')}, (response) =>{
+                API.cookies.remove('token');
+                window.location.href = '/login';
+            });
+        }else{
+            API.cookies.remove('token');
+            window.location.href = '/login';
+        }
     }
 }

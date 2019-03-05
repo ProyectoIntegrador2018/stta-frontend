@@ -30,6 +30,15 @@ export default class Documentos extends Component {
         });
     };
 
+    deleteFiles = (rows) =>{
+        this.setState({loading:true});
+        API.call('deleteFiles',{files:JSON.stringify(rows)},(response) => {
+
+            this.setState({ loading:false});
+            this.refreshData();
+        });
+    };
+
     componentWillMount() {
         this.refreshData();
     }
@@ -47,6 +56,7 @@ export default class Documentos extends Component {
                     Subir documento de proceso</Button></Link>
                 <h1><Icon type="file-excel" /> Documentos</h1>
                 <DataTable loading={this.state.loading} data={this.state.data}
+                           deleteFunc={this.deleteFiles} rowSelection={true}
                 columns={[{
                     title: 'Nombre del documento',
                     key: 'nombre',
@@ -79,7 +89,7 @@ export default class Documentos extends Component {
                             OK
                         </Button>,]}>
                     <div style={{textAlign:'right'}}><h3>{this.state.record.fecha}</h3></div>
-                    <DataTable columns={this.state.cols} data={this.state.data2} />
+                    <DataTable columns={this.state.cols} data={this.state.data2}/>
 
 
                 </Modal>

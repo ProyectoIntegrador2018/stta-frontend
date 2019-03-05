@@ -13,7 +13,7 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
     class extends React.Component {
       render() {
         const {
-          visible, onCancel, onCreate, form,
+          visible, onCancel, onCreate, form, loading
         } = this.props;
         const { getFieldDecorator } = form;
         return (
@@ -22,7 +22,7 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
             title="Restablecer contraseña"
             okText="Enviar"
             onCancel={onCancel}
-
+            okButtonProps={{ disabled: loading, loading:loading }}
             onOk={onCreate}>
             <Form layout="vertical">
               <Form.Item label="Correo electrónico" type="email">
@@ -49,6 +49,8 @@ class Login extends Component {
 
   state = {
     visible: false,
+      loading: false,
+      rememberMe: true
   };
 
   showModal = () => {
@@ -61,20 +63,24 @@ class Login extends Component {
 
   handleCreate = () => {
     const form = this.formRef.props.form;
+
     form.validateFields((err, values) => {
       if (err) {
         return;
       }
 
-      console.log('Received values of form: ', values);
+      this.setState({ loading: true });
       form.resetFields();
       API.call('addTokenAdmin',{email:values.correo},(response)=>{
-          if(response.data[0][0] === 1){
+          if(response.resp === 1){
               Notifications.openNotificationWithIcon("success","Revisa tu correo electronico","")
+              this.setState({ visible: false  });
+          }else{
+              Notifications.openNotificationWithIcon("warning","Error",response.detail)
           }
-      });
+          this.setState({ loading: false  });
 
-      this.setState({ visible: false });
+      });
     });
   };
 
@@ -86,14 +92,16 @@ class Login extends Component {
     e.preventDefault();
     this.props.form.validateFields((error, values) => {
       if (!error) {
-        console.log('Valores recibidos ', values);
-        API.call('boolAdminLogin',{email:values.userName,password:values.password},(response) => {
+          this.setState({ loading: true });
+        API.call('boolAdminLogin',{email:values.userName,password:values.password,remember:values.remember ? 1:0},(response) => {
             console.log(response);
-            if (response.data[0][0] === 1){
-                Notifications.openNotificationWithIcon("success","Inicio de sesión exitoso","")
+            this.setState({ loading: false });
+            if (response.resp === 1){
+                Notifications.openNotificationWithIcon("success","Inicio de sesión exitoso","");
+                API.cookies.set('token',response.data[0][1]);
                 window.location = "/dashboard";
             }else{
-                Notifications.openNotificationWithIcon("error","Credenciales incorrectas","")
+                Notifications.openNotificationWithIcon("error","Error",response.detail)
             }
         });
 
@@ -141,19 +149,20 @@ class Login extends Component {
                   <Checkbox>Recuérdame</Checkbox>
                 )}
                 <a className="login-form-right" onClick={this.showModal}>¿Olvidaste tu contraseña?</a>
-                <CollectionCreateForm
-                  wrappedComponentRef={this.saveFormRef}
-                  visible={this.state.visible}
-                  onCancel={this.handleCancel}
-                  onCreate={this.handleCreate}/>
                 <br></br>
-                <Button type="primary" htmlType="submit" className="login-form-button">
+                <Button type="primary" htmlType="submit" className="login-form-button"
+                        loading={this.state.loading} disabled={this.state.loading}>
                   Accesar
                 </Button> 
                 <br></br>
-                <a className="login-form-right" href="#1">Registrarse</a>
               </Form.Item>
             </Form>
+            <CollectionCreateForm
+                wrappedComponentRef={this.saveFormRef}
+                visible={this.state.visible}
+                loading={this.state.loading}
+                onCancel={this.handleCancel}
+                onCreate={this.handleCreate}/>
           </Col>
         </Row>
       </div>      

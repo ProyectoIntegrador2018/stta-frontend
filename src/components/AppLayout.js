@@ -3,7 +3,8 @@ import {
     Layout, Menu, Icon
 } from 'antd';
 import tec from '../images/tec.png'
-import { Link } from 'react-router-dom'
+import { Link,Redirect } from 'react-router-dom'
+import API from "../tools/API";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -16,35 +17,6 @@ export default class AppLayout extends Component {
 
         }
     }
-
-    BasicLoggedIn = () => {
-        return (
-            <Layout className={'layout'}>
-                <Header className={'primaryBackground'}>
-                    <img alt="ExSaM" className={'logo'} src={tec}/>
-                    <h2 className={'logoName'} >  Sistema de Trazabilidad de Tramites Escolares</h2>
-                    <Menu mode="horizontal"
-                          size={'small'}
-                          style={{ lineHeight: '64px',backgroundColor:'transparent',textAlign:'right', border:'unset' }}>
-                        <Menu.SubMenu style={{ border:'unset', color:'white' }}
-                                      title={<span className="submenu-title-wrapper">dd</span>}>
-                            <Menu.Item className={'item-logout'}>
-                                Salir
-                            </Menu.Item>
-                        </Menu.SubMenu>
-
-                    </Menu>
-                </Header>
-
-                <Content style={{ padding: '0', height:'100%' }}>
-                    {this.props.children}
-                </Content>
-                <Footer className={'footer'}>
-                    STTE ITESM - Sistema de Trazabilidad de Tramites Escolares ITESM ©2019
-                </Footer>
-
-            </Layout>
-        )};
 
     Basic = () => {
         return (
@@ -78,7 +50,7 @@ export default class AppLayout extends Component {
                             <Link to={"/documentos"}><Icon type="file-excel" />
                             <span className="nav-text">Documentos CSV</span></Link>
                         </Menu.Item>
-                        <Menu.Item key="5">
+                        <Menu.Item key="5" onClick={(e) => {API.logout();}}>
                             <Icon type="logout" />
                             <span>Salir</span>
                         </Menu.Item>
@@ -101,6 +73,9 @@ export default class AppLayout extends Component {
         )};
 
     render() {
-        return this.props.type === "basic" ? this.Basic() : this.props.type === "basicLoggedIn" ? this.BasicLoggedIn() : (<div></div>);
+        if (API.cookies.get('token') !=  null){
+            return this.Basic();
+        }
+        return (<Redirect to={"/login"}/>);
     }
 }
